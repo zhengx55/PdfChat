@@ -1,18 +1,36 @@
 "use client";
 import { trpc } from "@/app/_trpc/client";
-import { Ghost, MessageSquare, Plus, Trash } from "lucide-react";
+import { Ghost, Loader2, MessageSquare, Plus, Trash } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
-import React from "react";
+import React, { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Button } from "./ui/button";
+import UploadButton from "./UploadButton";
 const Dashboard = () => {
+  const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<
+    string | null
+  >(null);
+  const utils = trpc.useContext();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
+  const { mutate: deleteFile, isLoading: isDeleting } =
+    trpc.deleteFile.useMutation({
+      onSuccess: () => {
+        utils.getUserFiles.invalidate();
+      },
+      onMutate: ({ id }) => {
+        setCurrentlyDeletingFile(id);
+      },
+      onSettled: () => {
+        setCurrentlyDeletingFile(null);
+      },
+      onError: (err: any) => {},
+    });
   return (
     <main className="mx-auto max-w-7xl md:p-10">
       <div className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5">
         <h1 className="mb-3 font-bold text-5xl text-gray-900">My Files</h1>
-        {/* UploadButton */}
+        <UploadButton isSubscribed={false} />
       </div>
       {files && files?.length !== 0 ? (
         <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
@@ -55,8 +73,17 @@ const Dashboard = () => {
                       <MessageSquare className="h-4 w-4" />
                       mocked
                     </div>
-                    <Button className="w-full" size="sm" variant="destructive">
-                      <Trash className="w-4 h-4" />
+                    <Button
+                      onClick={() => deleteFile({ id: file.id })}
+                      className="w-full"
+                      size="sm"
+                      variant="destructive"
+                    >
+                      {currentlyDeletingFile === file.id ? (
+                        <Loader2 className="w-4 h-4" />
+                      ) : (
+                        <Trash className="w-4 h-4" />
+                      )}
                     </Button>
                   </div>
                 </li>

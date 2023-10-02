@@ -54,6 +54,7 @@ export const appRouter = router({
     }
     return { success: true };
   }),
+  getFile: privateProcedure.mutation(() => {}),
 });
 // Export type router type signature,
 // NOT the router itself.

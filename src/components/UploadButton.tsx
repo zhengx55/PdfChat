@@ -47,42 +47,44 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
     return interval;
   };
 
+  const onDragHandler = async (acceptedFile: any) => {
+    setIsUploading(true);
+
+    const progressInterval = startSimulatedProgress();
+
+    // handle file uploading
+    const res = await startUpload(acceptedFile);
+
+    if (!res) {
+      return toast({
+        title: "Something went wrong",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+
+    const [fileResponse] = res;
+
+    const key = fileResponse?.key;
+
+    if (!key) {
+      return toast({
+        title: "Something went wrong",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+
+    clearInterval(progressInterval);
+    setUploadProgress(100);
+
+    startPolling({ key });
+  };
+
   return (
     <Dropzone
       multiple={false}
-      onDrop={async (acceptedFile) => {
-        setIsUploading(true);
-
-        const progressInterval = startSimulatedProgress();
-
-        // handle file uploading
-        const res = await startUpload(acceptedFile);
-
-        if (!res) {
-          return toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          });
-        }
-
-        const [fileResponse] = res;
-
-        const key = fileResponse?.key;
-
-        if (!key) {
-          return toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          });
-        }
-
-        clearInterval(progressInterval);
-        setUploadProgress(100);
-
-        startPolling({ key });
-      }}
+      onDrop={(acceptedFile) => onDragHandler(acceptedFile)}
     >
       {({ getRootProps, getInputProps, acceptedFiles }) => (
         <div
@@ -119,9 +121,6 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
               {isUploading ? (
                 <div className="w-full mt-4 max-w-xs mx-auto">
                   <Progress
-                    indicatorColor={
-                      uploadProgress === 100 ? "bg-green-500" : ""
-                    }
                     value={uploadProgress}
                     className="h-1 w-full bg-zinc-200"
                   />
