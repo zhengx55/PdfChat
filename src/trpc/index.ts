@@ -54,7 +54,20 @@ export const appRouter = router({
     }
     return { success: true };
   }),
-  getFile: privateProcedure.mutation(() => {}),
+  getFile: privateProcedure
+    .input(z.object({ key: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+      const file = await db.file.findFirst({
+        where: {
+          id: input.key,
+          userId,
+        },
+      });
+      if (!file) throw new TRPCError({ code: "NOT_FOUND" });
+
+      return file;
+    }),
 });
 // Export type router type signature,
 // NOT the router itself.
