@@ -2,9 +2,9 @@ import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
-import { pinecone } from "@/lib/pinecone";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { getPineconeClient } from "@/lib/pinecone";
 const f = createUploadthing();
 
 // FileRouter for your app, can contain multiple FileRoutes
@@ -38,6 +38,7 @@ export const ourFileRouter = {
         const loader = new PDFLoader(blob);
         const pageLevelDocs = await loader.load();
         const pagesAmt = pageLevelDocs.length;
+        const pinecone = await getPineconeClient();
         const pineconeIndex = pinecone.Index(process.env.PINECONE_NAME!);
         // generate vector for the text
         const embeddings = new OpenAIEmbeddings({

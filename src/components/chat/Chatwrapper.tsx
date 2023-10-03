@@ -6,7 +6,7 @@ import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { ChatContextProvider } from "@/context/chat";
 import Messages from "./Messages";
-// import ChatInput from "./ChatInput";
+import ChatInput from "./ChatInput";
 // import { PLANS } from "@/config/stripe";
 
 interface ChatWrapperProps {
@@ -38,7 +38,7 @@ const ChatWrapper = ({ fileId, isSubscribed }: ChatWrapperProps) => {
           </div>
         </div>
 
-        {/* <ChatInput isDisabled /> */}
+        <ChatInput isDisabled />
       </div>
     );
 
@@ -53,7 +53,7 @@ const ChatWrapper = ({ fileId, isSubscribed }: ChatWrapperProps) => {
           </div>
         </div>
 
-        {/* <ChatInput isDisabled /> */}
+        <ChatInput isDisabled />
       </div>
     );
 
@@ -84,7 +84,7 @@ const ChatWrapper = ({ fileId, isSubscribed }: ChatWrapperProps) => {
           </div>
         </div>
 
-        {/* <ChatInput isDisabled /> */}
+        <ChatInput isDisabled />
       </div>
     );
 
@@ -94,8 +94,7 @@ const ChatWrapper = ({ fileId, isSubscribed }: ChatWrapperProps) => {
         <div className="flex-1 justify-between flex flex-col mb-28">
           <Messages fileId={fileId} />
         </div>
-
-        {/* <ChatInput /> */}
+        <ChatInput />
       </div>
     </ChatContextProvider>
   );
