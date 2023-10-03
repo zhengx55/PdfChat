@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import Provider from "@/components/Provider";
 import "react-loading-skeleton/dist/skeleton.css";
 const inter = Inter({ subsets: ["latin"] });
-
+import "simplebar-react/dist/simplebar.min.css";
 export const metadata: Metadata = {
   title: "Chat with ai and your pdf files",
 };
