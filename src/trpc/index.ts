@@ -60,7 +60,7 @@ export const appRouter = router({
       const { userId } = ctx;
       const file = await db.file.findFirst({
         where: {
-          id: input.key,
+          key: input.key,
           userId,
         },
       });

@@ -13,19 +13,18 @@ const Dashboard = () => {
   >(null);
   const utils = trpc.useContext();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
-  const { mutate: deleteFile, isLoading: isDeleting } =
-    trpc.deleteFile.useMutation({
-      onSuccess: () => {
-        utils.getUserFiles.invalidate();
-      },
-      onMutate: ({ id }) => {
-        setCurrentlyDeletingFile(id);
-      },
-      onSettled: () => {
-        setCurrentlyDeletingFile(null);
-      },
-      onError: (err: any) => {},
-    });
+  const { mutate: deleteFile } = trpc.deleteFile.useMutation({
+    onSuccess: () => {
+      utils.getUserFiles.invalidate();
+    },
+    onMutate: ({ id }) => {
+      setCurrentlyDeletingFile(id);
+    },
+    onSettled: () => {
+      setCurrentlyDeletingFile(null);
+    },
+    onError: (err: any) => {},
+  });
   return (
     <main className="mx-auto max-w-7xl md:p-10">
       <div className="mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5">
@@ -80,7 +79,7 @@ const Dashboard = () => {
                       variant="destructive"
                     >
                       {currentlyDeletingFile === file.id ? (
-                        <Loader2 className="w-4 h-4" />
+                        <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         <Trash className="w-4 h-4" />
                       )}

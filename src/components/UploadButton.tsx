@@ -23,6 +23,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
 
   const { mutate: startPolling } = trpc.getFile.useMutation({
     onSuccess: (file) => {
+      console.log(file);
       router.push(`/dashboard/${file.id}`);
     },
     retry: true,
@@ -80,10 +81,7 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   };
 
   return (
-    <Dropzone
-      multiple={false}
-      onDrop={(acceptedFile) => onDragHandler(acceptedFile)}
-    >
+    <Dropzone multiple={false} onDrop={onDragHandler}>
       {({ getRootProps, getInputProps, acceptedFiles }) => (
         <div
           {...getRootProps()}
@@ -119,6 +117,9 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
               {isUploading ? (
                 <div className="w-full mt-4 max-w-xs mx-auto">
                   <Progress
+                    indicatorColor={
+                      uploadProgress === 100 ? "bg-green-500" : ""
+                    }
                     value={uploadProgress}
                     className="h-1 w-full bg-zinc-200"
                   />
