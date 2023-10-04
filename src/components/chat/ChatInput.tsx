@@ -46,7 +46,6 @@ const ChatInput = ({ isDisabled }: ChatInputProps) => {
                 aria-label="send message"
                 onClick={() => {
                   addMessage();
-
                   textareaRef.current?.focus();
                 }}
               >

@@ -46,9 +46,9 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
       if (!response.ok) {
         throw new Error("Failed to send message");
       }
-
       return response.body;
     },
+
     onMutate: async ({ message }) => {
       backupMessage.current = message;
       setMessage("");
@@ -194,7 +194,7 @@ export const ChatContextProvider = ({ fileId, children }: Props) => {
     setMessage(e.target.value);
   };
 
-  const addMessage = () => {};
+  const addMessage = () => sendMessage({ message });
 
   return (
     <ChatContext.Provider
