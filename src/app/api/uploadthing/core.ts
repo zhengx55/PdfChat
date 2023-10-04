@@ -45,7 +45,6 @@ export const ourFileRouter = {
           openAIApiKey: process.env.OPENAI_API_KEY,
         });
         await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
-          // @ts-ignore
           pineconeIndex,
           namespace: createdFile.id,
         });
@@ -58,6 +57,7 @@ export const ourFileRouter = {
           },
         });
       } catch (error) {
+        console.error(error);
         await db.file.update({
           data: {
             uploadStatus: "FAILED",
